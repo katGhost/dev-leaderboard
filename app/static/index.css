@@ -1,0 +1,37 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+
+}
+
+/* Auth */
+
+/* Landing */
+
+/* Flash messages */
+.flash-messages {
+    width: 100%;
+    max-width: 800px;
+    height: fit-content;
+    border-radius: 7px;
+}
+
+.alert-danger {
+    background: #E74C3C;
+}
+
+.alert-warning {
+    background: #F1C40F;
+}
+
+.alert-info {
+    background: #3498DB;
+}
+
+.alert-success {
+    background: #2ECC71;
+}
