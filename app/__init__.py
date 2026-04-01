@@ -1,8 +1,10 @@
 import os
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask import Flask
+from authlib.integrations.flask_client import OAuth
 
-
+# 
+oauth = OAuth()
 
 def create_app():
     app = Flask(__name__)
@@ -12,9 +14,12 @@ def create_app():
     app.config['PREFERRED_URL_SCHEME'] = 'https'
 
     # Extensions
+    oauth.init_app(app)
 
+    # Register the OAuth
+    
 
-    # Blueprint
+    # Register blueprints
     from .routes import app_bp
     app.register_blueprint(app_bp)
 
