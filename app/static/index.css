@@ -1,16 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@200;300;400;500;600;700;800;900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 body {
-
+    width: 100%;
+    overflow: hidden;
+    background: #131418;
 }
-
-/* Auth */
-
-/* Landing */
 
 /* Flash messages */
 .flash-messages {
@@ -34,4 +35,121 @@ body {
 
 .alert-success {
     background: #2ECC71;
+}
+
+
+/* Landing */
+.landing-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at 0% 20%, rgba(6, 156, 53, 0.25) 20%, transparent 60%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-landing {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.hero-content {
+    text-align: left;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #09B83E, #384e6b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    color: #1c7937;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    color: #f9f9f9;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+}
+
+
+.cta-landing {
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.05rem;
+}
+
+.cta-landing {
+    background: #09B83E;
+    color: whitesmoke;
+    box-shadow: 0 8px 25px rgba(40, 44, 56, 0.3);
+}
+
+.cta-landing:hover {
+    background: #09B83E;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
+}
+
+
+/* AUTH */
+.auth-page {
+    width: 100%;
+    height: 100vh;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-section {
+    background: rgba(40, 40, 40, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 7px;
+    border: 1.5px solid rgba(6, 56, 53, 0.7);
+    margin: auto;
+    padding: 1.5rem 2.5rem;
+    box-shadow: 0 12px 35px rgba(6, 156, 53, 0.2);
+    color: whitesmoke;
+}
+
+.login-btn {
+    background: #09B83E;
+    padding: 0.375rem 0.75rem;
+    border: none;
+    border-radius: 7px;
+    color: whitesmoke;
+    transition: all 0.3s ease-in;
+    box-shadow: 0 8px 25px rgba(40, 44, 56, 0.3);
+}
+
+.login-btn:hover {
+    background: #09B83E;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
 }
