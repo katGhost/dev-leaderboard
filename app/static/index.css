@@ -91,64 +91,54 @@ body {
 }
 
 
-.cta-landing {
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 1.05rem;
-}
-
-.cta-landing {
-    background: #09B83E;
-    color: whitesmoke;
-    box-shadow: 0 8px 25px rgba(40, 44, 56, 0.3);
-}
-
-.cta-landing:hover {
-    background: #09B83E;
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
-}
-
-
 /* AUTH */
-.auth-page {
-    width: 100%;
-    height: 100vh;
-    background: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .auth-section {
     background: rgba(40, 40, 40, 0.35);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 7px;
-    border: 1.5px solid rgba(6, 56, 53, 0.7);
+    /* border: 1.5px solid rgba(6, 56, 53, 0.7); */
     margin: auto;
     padding: 1.5rem 2.5rem;
     box-shadow: 0 12px 35px rgba(6, 156, 53, 0.2);
     color: whitesmoke;
 }
 
-.login-btn {
+.auth-container {
+    padding: .75rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.auth-title {
+    margin-bottom: 1.25rem;
+    font-weight: bold;
+    font-size: 2.25rem;
+    color: whitesmoke;
+}
+
+.login-oauth-btn,
+.login-github-btn {
+    width: 100%;
     background: #09B83E;
-    padding: 0.375rem 0.75rem;
+    padding: 0.5rem 0.75rem;
     border: none;
     border-radius: 7px;
     color: whitesmoke;
     transition: all 0.3s ease-in;
+    font-size: 1rem;
     box-shadow: 0 8px 25px rgba(40, 44, 56, 0.3);
 }
 
-.login-btn:hover {
+a {
+    text-decoration: none;
+}
+
+.login-oauth-btn:hover,
+.login-github-btn:hover {
     background: #09B83E;
     transform: translateY(-3px);
     box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
