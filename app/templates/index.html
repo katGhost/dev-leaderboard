@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %} Welcome {% endblock %}
+
+{% block content %}
+<div class="landing-page">
+    <section class="hero-landing">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="gradient-text">Dev Leaderboard</span>
+            </h1>
+            <p class="hero-subtitle">Build. Compete. Level Up.</p>
+            <p class="hero-description">
+                Whether you're just starting out or sharpening your expertise, Dev Leaderboard keeps you accountable with real-time rankings and achievement streaks.
+                And when you’re unsure what to build next, our AI-powered roadmap suggests practical projects tailored to your experience-helping you move forward with clarity and purpose.
+                Stop wondering if you're improving. Start seeing it.
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="{{ url_for('app.login') }}" class="cta-landing">
+                    Get Started
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        
+        <div class="hero-visual">
+            <!-- Simple image of leaderboard representation -->
+        </div>
+    </section>
+</div>
+{% endblock %}

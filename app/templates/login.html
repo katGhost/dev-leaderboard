@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+    <div class="auth-page">
+        <section class="auth-section">
+            <div class="form-container">
+                <h2 class="form-title">Login with GitHub</h2>
+                <form method="POST" class="form-group">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" name="email" class="form-control" id="email" aria-describedby="email" placeholder="user@email.com" autocomplete="on" required>
+                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" id="current-password" autocomplete="on" placeholder="●●●●●●●●" required>
+                    </div>
+                    <!-- <div class="">
+                        <a href="#" class="forgot-password" for="check">Forgot password?</a>
+                    </div> -->
+                    <button type="submit" class="login-btn mb-4">Sign In</button>
+                </form>
+            </div>
+        </section>
+    </div>
+    
+{% endblock %}
+
+
