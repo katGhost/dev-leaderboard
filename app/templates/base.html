@@ -17,21 +17,12 @@
             <a class="navbar-brand" href="/">Dev Leaderboard</a>
 
             <div class="collapse navbar-collapse" id="navbar">
-                {% if session["user_id"] %}
+                {% if session.get("user") %}
                     <ul class="navbar-nav me-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="/budgeting">Leaderboard</a></li> 
                     </ul>
                     <ul class="navbar-nav ms-auto mt-2">
-                        <a href="{{ url_for('toggle_theme') }}" class="nav-link theme">
-                            <span class="nav-item toggler">
-                                {% if theme == "dark" %}
-                                    <i class="fa-solid fa-sun"></i>
-                                {% else %}
-                                    <i class="fa-solid fa-moon"></i>
-                                {% endif %}
-                            </span>
-                        </a>
                         <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
                     </ul>
                 {% else %}
