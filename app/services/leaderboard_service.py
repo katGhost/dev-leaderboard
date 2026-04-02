@@ -14,7 +14,7 @@ def get_leaderboard(users):
     leaderboard = []
     for user in users:
         github = GithubService(user["github_token"])
-        score = github.get_weekly_contributions()
+        score = github.get_weekly_contributions(user['github_username'])
         leaderboard.append({"id": user["id"], "score": score})
 
     # Sort descending by score
