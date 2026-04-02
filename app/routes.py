@@ -6,6 +6,8 @@ from app.config import Config
 from app.extensions import db
 from authlib.jose import jwt
 from app.models import User
+from app.services.leaderboard_service import get_leaderboard
+from app.services.ai_service import suggest_projects
 
 
 app_bp = Blueprint('app', __name__)
@@ -22,7 +24,9 @@ def dashboard():
         return redirect(url_for('app.home'))
 
     user = User.query.get(session.get('user_id'))
-    return render_template('dashboard.html', user=user)
+    # AI suggestions
+    suggestions = suggest_projects(user)
+    return render_template('dashboard.html', user=user, suggestions=suggestions)
 
 
 @app_bp.route('/leaderboard')
@@ -31,26 +35,8 @@ def leaderboard():
         return redirect(url_for('app.home'))
 
     # fetch all users who have connected github
-    users_with_github = User.query.filter(
-        User.github_token.isnot(None)
-    ).all()
-
-    leaderboard_data = []
-    for u in users_with_github:
-        from app.services.github_service import GithubService
-        github = GithubService(u.github_token)
-        score = github.get_weekly_contributions(u.github_username)
-        leaderboard_data.append({
-            'name': u.name,
-            'nickname': u.nickname,
-            'picture': u.picture,
-            'github_username': u.github_username,
-            'score': score
-        })
-
-    leaderboard_data.sort(key=lambda x: x['score'], reverse=True)
-
-    return render_template('leaderboard.html', users=leaderboard_data)
+    rankings = get_leaderboard()
+    return render_template('leaderboard.html', users=rankings)
 
 
 @app_bp.route('/login', methods=['GET', 'POST'])
