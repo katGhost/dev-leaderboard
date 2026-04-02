@@ -26,10 +26,8 @@ class GithubService:
         response = requests.get(url, headers=self.headers, params=params)
         response.raise_for_status()
         return response.json()
-
-    def get_weekly_contributions(self):
-        """Return total commits across all repos in the past 7 days, cached per token."""
-        # Use token as cache key (or user_id if you prefer)
+    
+    def get_weekly_contributions(self, github_username: str):
         cache_key = self.token
         if cache_key in weekly_score_cache:
             return weekly_score_cache[cache_key]
@@ -39,9 +37,36 @@ class GithubService:
         total_commits = 0
 
         for repo in repos:
-            # Only count user's own commits in each repo
+            if repo.get('fork'):  # skip forks as per your spec
+                continue
             commits = self.get_repo_commits(repo['full_name'], since)
-            total_commits += len([c for c in commits if c.get('author') and c['author'].get('login')])
+            total_commits += len([
+                c for c in commits
+                if c.get('author') and
+                c['author'].get('login') == github_username  # only user's own commits
+            ])
 
         weekly_score_cache[cache_key] = total_commits
         return total_commits
+
+
+"""
+def get_weekly_contributions(self):
+    # Return total commits across all repos in the past 7 days, cached per token
+    # Use token as cache key (or user_id if you prefer)
+    cache_key = self.token
+    if cache_key in weekly_score_cache:
+        return weekly_score_cache[cache_key]
+
+    since = datetime.utcnow() - timedelta(days=7)
+    repos = self.get_user_repos()
+    total_commits = 0
+
+    for repo in repos:
+        # Only count user's own commits in each repo
+        commits = self.get_repo_commits(repo['full_name'], since)
+        total_commits += len([c for c in commits if c.get('author') and c['author'].get('login')])
+
+    weekly_score_cache[cache_key] = total_commits
+    return total_commits
+"""
