@@ -6,29 +6,26 @@ oauth = OAuth()
 def init_oauth(app):
     oauth.init_app(app)
 
-    # Register the OAuth
     oauth.register(
-        'auth0',
-        client_id=f'{Config.AUTH0_CLIENT_ID}',
-        client_secret=f'{Config.AUTH0_CLIENT_SECRET}',
-        # server_metadata_url=f'https://{Config.AUTH0_DOMAIN}/.well-known/openid-configuration',
-        api_base_url=f'https://{Config.AUTH0_DOMAIN}',
-        access_token_url=f'https://{Config.AUTH0_DOMAIN}/oauth/token',
-        authorize_url=f'https://{Config.AUTH0_DOMAIN}/authorize',
+        name='auth0',
+        client_id=Config.AUTH0_CLIENT_ID,
+        client_secret=Config.AUTH0_CLIENT_SECRET,
+        server_metadata_url=f'https://{Config.AUTH0_DOMAIN}/.well-known/openid-configuration',
         client_kwargs={
             'scope': 'openid profile email'
         },
     )
 
-    # github
     oauth.register(
-        'github',
+        name='github',
         client_id=app.config['GITHUB_CLIENT_ID'],
         client_secret=app.config['GITHUB_CLIENT_SECRET'],
-        access_token_url=f'{app.config["GITHUB_API_BASE_URL"]}/login/oauth/access_token',
-        authorize_url=f'{app.config["GITHUB_API_BASE_URL"]}login/oauth/authorize',
-        api_base_url=f'{app.config["GITHUB_API_BASE_URL"]}',
+        access_token_url='https://github.com/login/oauth/access_token',
+        authorize_url='https://github.com/login/oauth/authorize',
+        api_base_url='https://api.github.com/',
         client_kwargs={
-            'scope': 'read:user repo'
+            'scope': 'read:user repo',
+            # tells GitHub to send JSON back instead of form-encoded -> FIX REDIRECTION
+            'token_endpoint_auth_method': 'client_secret_post',
         },
     )
