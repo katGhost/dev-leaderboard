@@ -1,14 +1,59 @@
 {% extends "base.html" %}
-
-{% block title %} Home {% endblock %}
+{% block title %} Dashboard {% endblock %}
 
 {% block content %}
-    <h2>Welcome {{ user }}</h2>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Welcome, {{ user.name or user.nickname or 'Developer' }}</h2>
+            <p class="text-muted">@{{ user.nickname }}</p>
+        </div>
+    </div>
 
-    <!-- <h3>Your AI Roadmap</h3>
-    <ul>
-    {% for project in suggestions %}
-        <li>{{ project }}</li>
-    {% endfor %}
-    </ul> -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <img 
+                        src="{{ user.picture }}" 
+                        alt="Avatar" 
+                        width="60" 
+                        class="rounded-circle mb-2"
+                    >
+                    <h5>{{ user.name }}</h5>
+                    <p class="text-muted mb-1">{{ user.email }}</p>
+                    {% if user.github_username %}
+                        <p class="text-success">
+                            <i class="fa-brands fa-github me-1"></i>
+                            {{ user.github_username }}
+                        </p>
+                    {% else %}
+                        <a href="{{ url_for('app.github_login') }}" class="btn btn-dark btn-sm mt-2">
+                            <i class="fa-brands fa-github me-1"></i>
+                            Connect GitHub
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4>Your AI Roadmap</h4>
+                    <p class="text-muted">
+                        Connect GitHub to unlock AI-powered project suggestions.
+                    </p>
+                    <!-- AI suggestions -->
+                     <h3 class="mt-4">Your AI Roadmap</h3>
+                    <ul>
+                        {% for project in suggestions %}
+                            <li>{{ project }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
