@@ -3,14 +3,15 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4">Weekly Leaderboard</h2>
+    <h2 class="leaderboard-title mb-4">Weekly Leaderboard</h2>
+    <p class="text-secondary mb-4">Ranked by commits in the last 7 days across all owned repos.</p>
 
     {% if users %}
         <div class="table-responsive">
             <table class="table table-dark table-hover align-middle">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">Rank</th>
                         <th scope="col">Developer</th>
                         <th scope="col">GitHub</th>
                         <th scope="col">Commits This Week</th>
@@ -19,23 +20,29 @@
                 <tbody>
                     {% for entry in users %}
                     <tr>
-                        <td>{{ loop.index }}</td>
                         <td>
-                            <img 
-                                src="{{ entry.picture }}" 
-                                alt="avatar" 
-                                width="32" 
+                            {% if loop.index == 1 %}
+                                <span title="1st">🥇</span>
+                            {% elif loop.index == 2 %}
+                                <span title="2nd">🥈</span>
+                            {% elif loop.index == 3 %}
+                                <span title="3rd">🥉</span>
+                            {% else %}
+                                {{ loop.index }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <img
+                                src="{{ entry.picture }}"
+                                alt="avatar"
+                                width="32"
                                 class="rounded-circle me-2"
                             >
                             {{ entry.name or entry.nickname }}
                         </td>
                         <td>
-                            {% if entry.github_username %}
-                                <i class="fa-brands fa-github me-1"></i>
-                                {{ entry.github_username }}
-                            {% else %}
-                                <span class="text-muted">Not connected</span>
-                            {% endif %}
+                            <i class="fa-brands fa-github me-1"></i>
+                            {{ entry.github_username }}
                         </td>
                         <td>
                             <span class="badge bg-success fs-6">{{ entry.score }}</span>
@@ -46,7 +53,15 @@
             </table>
         </div>
     {% else %}
-        <p class="text-muted">No developers on the leaderboard yet. Connect GitHub to appear here.</p>
+        <div class="text-center mt-5">
+            <p class="text-secondary">No developers on the leaderboard yet.</p>
+            {% if not session.get('github_token') %}
+                <a href="{{ url_for('app.github_login') }}" class="btn btn-dark">
+                    <i class="fa-brands fa-github me-1"></i>
+                    Connect GitHub to appear here
+                </a>
+            {% endif %}
+        </div>
     {% endif %}
 </div>
 {% endblock %}

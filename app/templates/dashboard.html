@@ -5,8 +5,8 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-12">
-            <h2>Welcome, {{ user.name or user.nickname or 'Developer' }}</h2>
-            <p class="text-muted">@{{ user.nickname }}</p>
+            <h2 class="username">Welcome, {{ user.name or user.nickname or 'Developer' }}</h2>
+            <p class="text-secondary">@{{ user.nickname }}</p>
         </div>
     </div>
 
@@ -20,15 +20,15 @@
                         width="60" 
                         class="rounded-circle mb-2"
                     >
-                    <h5>{{ user.name }}</h5>
-                    <p class="text-muted mb-1">{{ user.email }}</p>
+                    <h5 class="username">{{ user.name }}</h5>
+                    <p class="text-secondary mb-1">{{ user.email }}</p>
                     {% if user.github_username %}
                         <p class="text-success">
                             <i class="fa-brands fa-github me-1"></i>
                             {{ user.github_username }}
                         </p>
                     {% else %}
-                        <a href="{{ url_for('app.github_login') }}" class="btn btn-dark btn-sm mt-2">
+                        <a href="{{ url_for('app.github_login') }}" class="btn btn-github mt-2">
                             <i class="fa-brands fa-github me-1"></i>
                             Connect GitHub
                         </a>
@@ -40,15 +40,18 @@
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h4>Your AI Roadmap</h4>
-                    <p class="text-muted">
-                        Connect GitHub to unlock AI-powered project suggestions.
+                    <h4 class="roadmap-title">Your AI Roadmap</h4>
+                    <p class="text-secondary">
+                        Your AI-powered project suggestions will be ready soon.
                     </p>
                     <!-- AI suggestions -->
-                     <h3 class="mt-4">Your AI Roadmap</h3>
-                    <ul>
+                     <h3 class="roadmap-subtitle mt-4">Your AI Roadmap</h3>
+                    <ul class="roadmap-list">
                         {% for project in suggestions %}
-                            <li>{{ project }}</li>
+                        <div class="roadmap-list-item">
+                            <i class="fa-solid fa-circle-dot"></i><li class="roadmap-item">{{ project }}</li>
+                        </div>
+                            
                         {% endfor %}
                     </ul>
                 </div>
