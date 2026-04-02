@@ -1,22 +1,35 @@
-
 from app.services.github_service import GithubService
-# def calculate_points(commits):
-#     return commits  # simple for MVP
+from app.models import User
 
 
-# def rank_users(users):
-#     return sorted(users, key=lambda x: x["points"], reverse=True)
-
-def get_leaderboard(users):
+def get_leaderboard():
     """
-    users: list of dicts {'id': ..., 'github_token': ...}
+    Fetch all users with GitHub connected,
+    calculate their weekly contributions,
+    return sorted leaderboard.
     """
+    users_with_github = User.query.filter(
+        User.github_token.isnot(None),
+        User.github_username.isnot(None)
+    ).all()
+
     leaderboard = []
-    for user in users:
-        github = GithubService(user["github_token"])
-        score = github.get_weekly_contributions(user['github_username'])
-        leaderboard.append({"id": user["id"], "score": score})
 
-    # Sort descending by score
-    leaderboard.sort(key=lambda x: x["score"], reverse=True)
+    for user in users_with_github:
+        try:
+            github = GithubService(user.github_token)
+            score = github.get_weekly_contributions(user.github_username)
+            leaderboard.append({
+                'name': user.name,
+                'nickname': user.nickname,
+                'picture': user.picture,
+                'github_username': user.github_username,
+                'score': score
+            })
+        except Exception as e:
+            # do not let one bad token break the whole leaderboard
+            print(f"Error fetching contributions for {user.github_username}: {e}")
+            continue
+
+    leaderboard.sort(key=lambda x: x['score'], reverse=True)
     return leaderboard
