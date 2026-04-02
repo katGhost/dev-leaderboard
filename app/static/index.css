@@ -13,6 +13,22 @@ body {
     background: #131418;
 }
 
+.app-name {
+    background: linear-gradient(135deg, #09B83E, #384e6b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+.nav-item .nav-link {
+    color: whitesmoke !important;
+}
+
+.nav-item .nav-link:hover {
+    color: #09B83E !important;
+}
+
 /* Flash messages */
 .flash-messages {
     width: 100%;
@@ -36,7 +52,6 @@ body {
 .alert-success {
     background: #2ECC71;
 }
-
 
 /* Landing */
 .landing-page {
