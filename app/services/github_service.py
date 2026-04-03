@@ -91,6 +91,15 @@ class GithubService:
 
         return commits
 
+    def get_authenticated_user(self):
+        """Fetch the authenticated user's information."""
+        response = requests.get(
+            f'{self.GITHUB_API_BASE_URL}/user',
+            headers=self.headers
+        )
+        response.raise_for_status()
+        return response.json()
+
     def get_weekly_contributions(self, github_username: str):
         """Return total commits across all owned repos in the past 7 days."""
         cache_key = f"{self.token}:{github_username}"
@@ -112,61 +121,70 @@ class GithubService:
         weekly_score_cache[cache_key] = total_commits
         return total_commits
     
+    """
+    get or extract user experience level from GitHub profile
+    summarize user activity
+    """
+    def summarize_user_activity(self, github_token):
+        
+        # get repos and commits to extract information for experience level classification
+        since_last_7_days = datetime.utcnow() - timedelta(days=7)
+        since_last_year = datetime.utcnow() - timedelta(days=365)    # all time effectively for speed
 
+        # token
+        self.token = github_token
+        self.headers = {
+            'Authorization': f'Bearer {self.token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
 
-"""HELPER FUNCTIONs"""
+        # Get user
+        user = self.get_authenticated_user()
+        username = user['login']
 
-# get or extract user experience level from GitHub profile
+        # Get repos, from repos get total commits first
+        repos = self.get_user_repos()[:5]
+
+        # get commits from the last 7 days
+        total_commits = 0
+        commits_last_7_days = 0
+        languages = set()
+
+        # extract languages used across repos for AI recomendations
+        for repo in repos:
+            fullname = repo['full_name']
+
+            # total commits
+            total_commits += len(self.get_repo_commits(fullname, since_last_year, username))
+
+            # commits in the last 7 days
+            commits_last_7_days += len(self.get_repo_commits(fullname, since_last_7_days, username))
+
+            if repo.get('language'):
+                languages.add(repo['lanugage'])
+            
+        # Experience based on commits activity
+        # using simple heuristic based on public repos (and perhaps followers)
+        if total_commits < 30 and len(repos) < 3:
+            level = 'Beginner'
+        elif total_commits < 150 and len(repos) >= 4:
+            level = 'Intermediate'
+        else:
+            level = 'Advanced'
+        
+        # return an assumed user profile object
+        return {
+            'username': username,
+            'experience_level': level,
+            'commits_last_week': commits_last_7_days,
+            'languages_used': list(languages),
+            'repos_contributed': [r["name"] for r in repo],  # use list comprehension for contributions in other repos
+            'total_commits': total_commits
+        }
 
     
-# summarize user activity
-def summarize_user_activity(github_token):
 
-    github = GithubService(github_token)
-    
-    # get repos and commits to extract information for experience level classification
-    since_last_7_days = datetime.utcnow() - timedelta(days=7)
-    since_all_time = datetime.utcnow() - timedelta(days=365*10)
-
-    # Get authenticated user's username
-    user_response = requests.get(
-        f'{GithubService.GITHUB_API_BASE_URL}/user',
-        headers=github.headers
-    )
-    user_response.raise_for_status()
-    github_username = user_response.json()['login']
-
-    # Get repos, from repos get total commits first
-    # get commits from the last 7 days
-    repos = github.get_user_repos()
-    total_commits = github.get_repo_commits(repos[0]['full_name'], since_all_time, github_username) if repos else []   # if user has repos else an empty array as fallnback
-    commits_last_7_days = github.get_repo_commits(repos[0][ 'full_name'], since_last_7_days, github_username) if repos else []
-    
-    # simple heuristic based on public repos (and perhaps followers)
-    if not repos:
-        experience_level = 'No Repositories | Armature'
-    elif len(total_commits) < 50 and len(repos) < 3:
-        experience_level = 'Beginner'
-    elif len(total_commits) >= 50 and len(commits_last_7_days) >= 10 and len(repos) >= 5:
-        experience_level = 'Intermediate'
-    elif len(total_commits) >= 200 and len(commits_last_7_days) >= 30 and len(repos) >= 10:
-        experience_level = 'Advanced'
-    else:
-        experience_level = 'Intermediate'  # default to intermediate if they have some activity but don't meet advanced criteria
-    
-    # extract languages used across repos for AI recomendations
-    languages = set()
-    for repo in repos:
-        if repo.get('language'):
-            languages.add(repo['language'])
-    
-    # return an assumed user profile object
-    return {
-        'username': github_username,
-        'experience_level': experience_level,
-        'languages': list(languages),
-        'total_commits': len(total_commits)
-    }
 
 
 
