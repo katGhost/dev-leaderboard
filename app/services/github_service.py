@@ -111,3 +111,65 @@ class GithubService:
 
         weekly_score_cache[cache_key] = total_commits
         return total_commits
+    
+
+
+"""HELPER FUNCTIONs"""
+
+# get or extract user experience level from GitHub profile
+
+    
+# summarize user activity
+def summarize_user_activity(github_token):
+
+    github = GithubService(github_token)
+    
+    # get repos and commits to extract information for experience level classification
+    since_last_7_days = datetime.utcnow() - timedelta(days=7)
+    since_all_time = datetime.utcnow() - timedelta(days=365*10)
+
+    # Get authenticated user's username
+    user_response = requests.get(
+        f'{GithubService.GITHUB_API_BASE_URL}/user',
+        headers=github.headers
+    )
+    user_response.raise_for_status()
+    github_username = user_response.json()['login']
+
+    # Get repos, from repos get total commits first
+    # get commits from the last 7 days
+    repos = github.get_user_repos()
+    total_commits = github.get_repo_commits(repos[0]['full_name'], since_all_time, github_username) if repos else []   # if user has repos else an empty array as fallnback
+    commits_last_7_days = github.get_repo_commits(repos[0][ 'full_name'], since_last_7_days, github_username) if repos else []
+    
+    # simple heuristic based on public repos (and perhaps followers)
+    if not repos:
+        experience_level = 'No Repositories | Armature'
+    elif len(total_commits) < 50 and len(repos) < 3:
+        experience_level = 'Beginner'
+    elif len(total_commits) >= 50 and len(commits_last_7_days) >= 10 and len(repos) >= 5:
+        experience_level = 'Intermediate'
+    elif len(total_commits) >= 200 and len(commits_last_7_days) >= 30 and len(repos) >= 10:
+        experience_level = 'Advanced'
+    else:
+        experience_level = 'Intermediate'  # default to intermediate if they have some activity but don't meet advanced criteria
+    
+    # extract languages used across repos for AI recomendations
+    languages = set()
+    for repo in repos:
+        if repo.get('language'):
+            languages.add(repo['language'])
+    
+    # return an assumed user profile object
+    return {
+        'username': github_username,
+        'experience_level': experience_level,
+        'languages': list(languages),
+        'total_commits': len(total_commits)
+    }
+
+
+
+
+
+
