@@ -24,12 +24,18 @@
                             <i class="fa-brands fa-github me-1"></i>
                             Connected as <strong>{{ user.github_username }}</strong>
                         </p>
-                        <a href="{{ url_for('app.dashboard') }}" class="btn btn-dashboard-redirect mt-2">
-                            Go to Dashboard
-                        </a>
+                        <div class="github-connection-buttons">
+                            <a href="{{ url_for('app.dashboard') }}" class="btn btn-dashboard-redirect mt-2">
+                                Go to Dashboard
+                            </a>
+                            <a href="#" class="btn btn-disconnect-github mt-2">
+                                Disconnect GitHub
+                            </a>
+                        </div>
+                        
                     {% else %}
                         <p class="text-muted">GitHub not connected yet.</p>
-                        <a href="{{ url_for('app.github_login') }}" class="btn btn-dark mt-2">
+                        <a href="{{ url_for('app.github_login') }}" class="btn btn-github mt-2">
                             <i class="fa-brands fa-github me-1"></i>
                             Connect GitHub
                         </a>
