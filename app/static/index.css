@@ -9,25 +9,84 @@
 
 body {
     width: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
     background: #131418;
     color: rgb(235, 235, 235);
 }
 
-.app-name {
+/* NAVBAR */
+/* .app-name {
     background: linear-gradient(135deg, #09B83E, #384e6b);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 700;
+} */
+
+.custom-navbar {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: #232428;
 }
 
-.nav-item .nav-link {
-    color: whitesmoke !important;
+.custom-navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.nav-item .nav-link:hover {
-    color: #09B83E !important;
+.logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+}
+
+.logo .icon i {
+  color: #09B83E;
+  font-size: 1.6rem;
+}
+
+.logo .brand {
+  color: #e5e7eb;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* .logo .brand {
+  background: linear-gradient(90deg, #ffffff, #cbd5f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+} */
+
+.navbar-nav {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #cbd5e1 !important;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #09B83E !important;
+}
+
+.nav-link i {
+  font-size: 16px;
+}
+
+.nav-text {
+    display: inline;
 }
 
 /* Flash messages */
@@ -161,6 +220,10 @@ a {
 }
 
 /* DASHBOARD */
+.dashboard {
+    padding: 2.5rem !important;
+}
+
 .roadmap-title,
 leaderboard-title,
 .username {
@@ -186,14 +249,38 @@ leaderboard-title,
     
 }
 
+/* LEADERBOARD */
+.medal-gold {
+    color: #EFBF04;
+}
+
+.medal-silver {
+    color: #C0C0C0;
+}
+
+.medal-bronze {
+    color: #CD7F32;
+}
+
 /* PROFILE */
+#profileContainer {
+    padding: 1.5rem 3rem;
+}
+
 .card {
-    background: #1A1C22;
+    background: transparent;
+    border: 1.5px solid #232C38;
+    border-radius: 7px;
     padding: 1.5rem;
+    transition: all 0.25s ease-in-out;
 }
 
 .card > * + * {
     margin-top: 0.75rem;
+}
+
+.card:hover {
+    border: 1.5px solid #09B83E;
 }
 
 .card-title {
@@ -214,6 +301,56 @@ leaderboard-title,
 .btn-github:hover,
 .btn-dashboard-redirect:hover {
     background: #09B83E;
+    color: white;
     transform: translateY(-3px);
     box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
+}
+
+
+/* RESPONSIVENESS */
+@media (max-width: 768px) {
+    .app-name {
+        display: none;
+    }
+
+    .nav-link i {
+        display: none;
+    }
+
+    .nav-text {
+        font-size: 0.95rem;
+    }
+
+    .nav-link {
+        justify-content: center;
+        flex-direction: column;
+        padding: 0.5rem;
+    }
+
+    .navbar-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .navbar-nav {
+        gap: .5rem;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .github-connection-buttons {
+    }
+
+    .btn-disconnect-github {
+        background: transparent;
+        padding: 0.5rem 0.75rem;
+        border: 1.2px solid #09B83E;
+        border-radius: 7px;
+        color: #f3f3f3;
+        transition: all 0.3s ease-in;
+        font-size: 1rem;
+    }
 }
