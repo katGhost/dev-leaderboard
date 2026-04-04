@@ -3,11 +3,10 @@ from app.models import User
 
 
 def get_leaderboard():
-    """
-    Fetch all users with GitHub connected,
-    calculate their weekly contributions,
-    return sorted leaderboard.
-    """
+    
+    # Fetch all users with GitHub connected -> calculate their weekly contributions,
+    # return sorted leaderboard.
+    
     users_with_github = User.query.filter(
         User.github_token.isnot(None),
         User.github_username.isnot(None)
@@ -27,9 +26,11 @@ def get_leaderboard():
                 'score': score
             })
         except Exception as e:
-            # do not let one bad token break the whole leaderboard
+            # giard against one bad token breaking the whole leaderboard
             print(f"Error fetching contributions for {user.github_username}: {e}")
             continue
 
     leaderboard.sort(key=lambda x: x['score'], reverse=True)
     return leaderboard
+
+# define a user profile from the assumed profile in github service
