@@ -162,7 +162,7 @@ class GithubService:
             commits_last_7_days += len(self.get_repo_commits(fullname, since_last_7_days, username))
 
             if repo.get('language'):
-                languages.add(repo['lanugage'])
+                languages.add(repo['language'])
             
         # Experience based on commits activity
         # using simple heuristic based on public repos (and perhaps followers)
@@ -179,7 +179,7 @@ class GithubService:
             'experience_level': level,
             'commits_last_week': commits_last_7_days,
             'languages_used': list(languages),
-            'repos_contributed': [r["name"] for r in repo],  # use list comprehension for contributions in other repos
+            # 'repos_contributed': [r["name"] for r in repo],  # use list comprehension for contributions in other repos
             'total_commits': total_commits
         }
 
