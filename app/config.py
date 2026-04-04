@@ -24,3 +24,5 @@ class Config:
     # SQLite stored in project root
     SQLALCHEMY_DATABASE_URI = "sqlite:///devleaderboard.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
