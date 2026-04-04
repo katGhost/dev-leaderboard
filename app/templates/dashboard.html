@@ -2,16 +2,16 @@
 {% block title %} Dashboard {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-4 dashboard">
     <div class="row">
         <div class="col-md-12">
-            <h2 class="username">Welcome, {{ user.name or user.nickname or 'Developer' }}</h2>
+            <h2 class="username">Hi, {{ user.name or user.nickname or 'Developer' }}</h2>
             <p class="text-secondary">@{{ user.nickname }}</p>
         </div>
     </div>
 
     <div class="row mt-4">
-        <div class="col-md-4">
+        <div class="col-md-4 mt-2">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <img 
@@ -37,23 +37,40 @@
             </div>
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-8 mt-2 mb-5">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h4 class="roadmap-title">Your AI Roadmap</h4>
                     <p class="text-secondary">
-                        Your AI-powered project suggestions will be ready soon.
+                        Your AI-powered project suggestions to help you grow your coding journey.
                     </p>
-                    <!-- AI suggestions -->
-                     <h3 class="roadmap-subtitle mt-4">Your AI Roadmap</h3>
-                    <ul class="roadmap-list">
-                        {% for project in suggestions %}
-                        <div class="roadmap-list-item">
-                            <i class="fa-solid fa-circle-dot"></i><li class="roadmap-item">{{ project }}</li>
-                        </div>
-                            
-                        {% endfor %}
-                    </ul>
+
+                    {% if suggestions %}
+                        <ul class="roadmap-list list-unstyled">
+                            {% for project in suggestions %}
+                            <div class="roadmap-list-item mb-3">
+                                <i class="fa-solid fa-circle-dot me-2"></i>
+                                <strong>{{ project.title }}</strong>
+                                <p class="ms-4 mb-1 text-secondary">{{ project.description }}</p>
+                                {% if project.learning_outcome %}
+                                    <p class="ms-4 mb-0 text-success" style="font-size: 0.875rem;">
+                                        Learn: {{ project.learning_outcome }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-secondary">
+                            Connect GitHub to unlock your AI-powered roadmap.
+                        </p>
+                        {% if not user.github_username %}
+                            <a href="{{ url_for('app.github_login') }}" class="btn btn-dark btn-sm">
+                                <i class="fa-brands fa-github me-1"></i>
+                                Connect GitHub
+                            </a>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>
