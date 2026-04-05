@@ -54,11 +54,11 @@ body {
   font-size: 1.3rem;
 }
 
-/* .logo .brand {
+.logo .brand {
   background: linear-gradient(90deg, #ffffff, #cbd5f5);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-} */
+}
 
 .navbar-nav {
     display: flex;
@@ -144,9 +144,8 @@ body {
 }
 
 .gradient-text {
-    background: linear-gradient(135deg, #09B83E, #384e6b);
+    background: linear-gradient(90deg, #ffffff, #cbd5f5);
     -webkit-background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -206,6 +205,9 @@ body {
     transition: all 0.3s ease-in;
     font-size: 1rem;
     box-shadow: 0 8px 25px rgba(40, 44, 56, 0.3);
+    cursor: pointer;
+    display: block;
+    text-align: center; 
 }
 
 a {
@@ -214,42 +216,67 @@ a {
 
 .login-oauth-btn:hover,
 .login-github-btn:hover {
-    background: #09B83E;
+    background: #07a835;
     transform: translateY(-3px);
     box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
+    color: whitesmoke;
 }
 
-/* DASHBOARD */
+/* ======================DASHBOARD===================== */
 .dashboard {
     padding: 2.5rem !important;
 }
 
-.roadmap-title,
-leaderboard-title,
-.username {
-    color: #d8d8d8;
+.btn-generate-roadmap {
+    background: #09B83E;
+    padding: 0.5rem 0.75rem;
+    border: 1.2px solid #09B83E;
+    border-radius: 7px;
+    color: #131418;
+    transition: all 0.3s ease-in;
+    font-size: 1rem;
 }
 
-.roadmap-subtitle {
-    color: silver;
+.btn-generate-roadmap:hover {
+    background: #09B83E;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
 }
-.roadmap-list {
+
+.roadmap-icon {
+  color: #09B83E;
+  font-size: 12px;
 }
-.roadmap-list-item {
-    display: flex;
-    /* justify-content: space-evenly; */
-    align-items: center;
-    flex: 1;
-    gap: 0.95rem;
-    text-decoration: none;
-    color: #7C3AED;
+/* .roadmap-icon {
+  color: #a855f7;
+  font-size: 12px;
+} */
+
+.project-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e5e7eb;
 }
+
+.project-desc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.project-learn {
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
 .roadmap-item {
-    list-style-type: none;
-    
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* LEADERBOARD */
+
+
+/* ===============LEADERBOARD=============== */
 .medal-gold {
     color: #EFBF04;
 }
@@ -262,7 +289,7 @@ leaderboard-title,
     color: #CD7F32;
 }
 
-/* PROFILE */
+/* ===============PROFILE================ */
 #profileContainer {
     padding: 1.5rem 3rem;
 }
@@ -291,7 +318,7 @@ leaderboard-title,
 .btn-dashboard-redirect {
     background: #09B83E;
     padding: 0.5rem 0.75rem;
-    border: none;
+    border: 1.2px solid #09B83E;
     border-radius: 7px;
     color: #131418;
     transition: all 0.3s ease-in;
@@ -302,6 +329,23 @@ leaderboard-title,
 .btn-dashboard-redirect:hover {
     background: #09B83E;
     color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
+}
+
+.btn-disconnect-github {
+    background: transparent;
+    padding: 0.5rem 0.75rem;
+    border: 1.2px solid #09B83E;
+    border-radius: 7px;
+    color: #f3f3f3;
+    transition: all 0.3s ease-in;
+    font-size: 1rem;
+}
+
+.btn-disconnect-github:hover {
+    color: #09B83E;
+    border: none;
     transform: translateY(-3px);
     box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
 }
@@ -337,6 +381,19 @@ leaderboard-title,
         gap: .5rem;
     }
 
+    .hero-landing {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .hero-description {
+        max-width: 100%;
+    }
+
+    .auth-section {
+        width: 100%;
+    }
+
     .card {
         margin-bottom: 1rem;
     }
@@ -352,5 +409,12 @@ leaderboard-title,
         color: #f3f3f3;
         transition: all 0.3s ease-in;
         font-size: 1rem;
+    }
+
+    .btn-disconnect-github:hover {
+        color: #09B83E;
+        border: none;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
     }
 }
