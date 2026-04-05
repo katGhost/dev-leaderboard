@@ -1,13 +1,12 @@
 from datetime import datetime
 from app.extensions import db
 
-
 class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     auth0_id = db.Column(db.String(128), unique=True, nullable=False)
-    
+
     name = db.Column(db.String(128), nullable=True)
     email = db.Column(db.String(128), nullable=True)
     picture = db.Column(db.String(512), nullable=True)
@@ -16,6 +15,13 @@ class User(db.Model):
     github_username = db.Column(db.String(128), nullable=True)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    roadmaps = db.relationship(
+        "Roadmap",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="dynamic"
+    )
 
     def to_dict(self):
         return {
@@ -28,12 +34,15 @@ class User(db.Model):
             'github_username': self.github_username,
         }
     
-# AI roadmap suggestions model -> for faster retrieval and to reduce API calls
+    def __repr__(self):
+        return f"<User id={self.id} auth0_id={self.auth0_id}>"
+
+
 class Roadmap(db.Model):
     __tablename__ = 'roadmaps'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
 
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=False)
@@ -41,7 +50,9 @@ class Roadmap(db.Model):
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    user = db.relationship("User", back_populates="roadmaps")
+
     def __repr__(self):
-        return f'<Roadmap: title={self.title}, description={self.description}>'
+        return f"<Roadmap id={self.id} title={self.title}>"
     
 
