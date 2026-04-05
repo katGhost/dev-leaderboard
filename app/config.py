@@ -21,6 +21,11 @@ class Config:
     GITHUB_API_BASE_URL = "https://api.github.com"
     GITHUB_AUTHORIZATION_URL = os.getenv('GITHUB_AUTHORIZATION_URL')
 
+    # Token vault configuration
+    AUTH0_CUSTOM_API_CLIENT_ID = os.getenv("AUTH0_CUSTOM_API_CLIENT_ID")
+    AUTH0_CUSTOM_API_CLIENT_SECRET = os.getenv("AUTH0_CUSTOM_API_CLIENT_SECRET")
+    GITHUB_CONNECTION_NAME = os.getenv("GITHUB_CONNECTION_NAME", "github")
+
     # SQLite stored in project root
     SQLALCHEMY_DATABASE_URI = "sqlite:///devleaderboard.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
