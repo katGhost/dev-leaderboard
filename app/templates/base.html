@@ -41,12 +41,12 @@
 
             <div class="navbar-nav nav-right">
                 {% if session.get("user_id") %}
-                    <a class="nav-link" href="{{ url_for('app.logout') }}">
+                    <a class="nav-link logout" href="{{ url_for('app.logout') }}">
                         <i class="fa fa-arrow-right-from-bracket"></i>
                         <span class="nav-text">Logout</span>
                     </a>
                 {% else %}
-                    <a class="nav-link" href="{{ url_for('app.login') }}">
+                    <a class="nav-link login-link" href="{{ url_for('app.login') }}">
                         <i class="fa fa-arrow-right-to-bracket"></i>
                         <span class="nav-text">Login</span>
                     </a>
@@ -70,6 +70,8 @@
     <main>
         {% block content %}{% endblock %}
     </main>
+
+    {% block extrajs%}{% endblock %}
     
 </body>
 </html>
