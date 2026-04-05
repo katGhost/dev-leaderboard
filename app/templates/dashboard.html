@@ -44,31 +44,45 @@
                     <p class="text-secondary">
                         Your AI-powered project suggestions to help you grow your coding journey.
                     </p>
+                    <!-- Generate roadmap button -->
+                    <form method="POST" action="{{ url_for('app.generate_roadmap') }}">
+                        <button type="submit" class="btn btn-generate-roadmap btn-sm" onclick="this.disabled=true; this.innerText='Generating...'; this.form.submit();">
+                            Request Roadmap
+                        </button>
+                    </form>
 
                     {% if suggestions %}
-                        <ul class="roadmap-list list-unstyled">
+                        <ul class="roadmap-list list-unstyled mt-3">
                             {% for project in suggestions %}
-                            <div class="roadmap-list-item mb-3">
-                                <i class="fa-solid fa-circle-dot me-2"></i>
-                                <strong>{{ project.title }}</strong>
-                                <p class="ms-4 mb-1 text-secondary">{{ project.description }}</p>
-                                {% if project.learning_outcome %}
-                                    <p class="ms-4 mb-0 text-success" style="font-size: 0.875rem;">
+                                <li class="roadmap-item mb-4">
+
+                                    <!-- Title Row -->
+                                    <div class="d-flex align-items-start">
+                                        <i class="fa-solid fa-circle-dot roadmap-icon me-2 mt-1"></i>
+                                        <strong class="project-title">{{ project.title }}</strong>
+                                    </div>
+
+                                    <!-- Description -->
+                                    <p class="project-desc ms-4 mb-1 text-secondary">
+                                        {{ project.description }}
+                                    </p>
+
+                                    <!-- Learning Outcome -->
+                                    {% if project.learning_outcome %}
+                                    <p class="project-learn ms-4 mb-0 text-success">
                                         Learn: {{ project.learning_outcome }}
                                     </p>
-                                {% endif %}
-                            </div>
+                                    {% endif %}
+
+                                </li>
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <p class="text-secondary">
-                            Connect GitHub to unlock your AI-powered roadmap.
-                        </p>
+                        <p class="text-secondary"> Connect GitHub to unlock your AI-powered roadmap. </p>
                         {% if not user.github_username %}
-                            <a href="{{ url_for('app.github_login') }}" class="btn btn-dark btn-sm">
-                                <i class="fa-brands fa-github me-1"></i>
-                                Connect GitHub
-                            </a>
+                        <a href="{{ url_for('app.github_login') }}" class="btn btn-dark btn-sm">
+                            <i class="fa-brands fa-github me-1"></i> Connect GitHub
+                        </a>
                         {% endif %}
                     {% endif %}
                 </div>
@@ -77,3 +91,4 @@
     </div>
 </div>
 {% endblock %}
+
