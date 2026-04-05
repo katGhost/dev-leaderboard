@@ -5,9 +5,10 @@ from app.oauth import oauth
 from app.config import Config
 from app.extensions import db
 from authlib.jose import jwt
-from app.models import User
+from app.models import User, Roadmap
 from app.services.leaderboard_service import get_leaderboard
-from app.services.ai_service import suggest_projects
+from app.services.ai_service import generate_next_projects
+from app.services.github_service import GithubService
 
 
 app_bp = Blueprint('app', __name__)
@@ -24,17 +25,62 @@ def dashboard():
         return redirect(url_for('app.home'))
 
     user = User.query.get(session.get('user_id'))
-    # AI suggestions
-    suggestions = suggest_projects(user)
+
+    # always initialize suggestions to empty list
+    suggestions = []
+
+    if user.github_token:
+        try:
+            # fetch stored roadmap from DB -> no API call here
+            suggestions = Roadmap.query.filter_by(
+                user_id=user.id
+            ).order_by(Roadmap.created_at.desc()).limit(3).all()
+        except Exception as e:
+            print(f"Dashboard roadmap fetch error: {e}")
+
     return render_template('dashboard.html', user=user, suggestions=suggestions)
 
+
+@app_bp.route("/generate-roadmap", methods=["POST"])
+def generate_roadmap():
+    if 'user_id' not in session:
+        return redirect(url_for('app.home'))
+
+    user = User.query.get(session.get('user_id'))
+
+    if user.github_token:
+        try:
+            github = GithubService(user.github_token)
+            user_activity = github.summarize_user_activity(user.github_token)
+            suggestions = generate_next_projects(user_activity)
+
+            # clear old roadmap entries for this user
+            Roadmap.query.filter_by(user_id=user.id).delete()
+
+            # save new roadmap
+            for project in suggestions:
+                new_project = Roadmap(
+                    user_id=user.id,
+                    title=project["title"],
+                    description=project["description"],
+                    learning_outcome=project.get("learning_outcome", "")
+                )
+                db.session.add(new_project)
+
+            db.session.commit()
+
+        except Exception as e:
+            print(f"Roadmap generation error: {e}")
+            db.session.rollback()
+
+    return redirect(url_for('app.dashboard'))
 
 @app_bp.route('/leaderboard')
 def leaderboard():
     if 'user_id' not in session:
         return redirect(url_for('app.home'))
 
-    # fetch all users who have connected github
+    # Fetch and display all users ranked by comprehensive scoring
     rankings = get_leaderboard()
     return render_template('leaderboard.html', users=rankings)
 
@@ -110,7 +156,7 @@ def github_login():
         return redirect(url_for('app.home'))
     
     redirect_uri = url_for('app.github_callback', _external=True)
-    print('GITHUB REDIRECT: ', redirect_uri)
+    # print('GITHUB REDIRECT: ', redirect_uri)
     return oauth.github.authorize_redirect(redirect_uri)
 
 
@@ -140,6 +186,7 @@ def github_callback():
     db.session.commit()
 
     return redirect(url_for('app.dashboard'))
+
 
 
 @app_bp.route('/logout')
