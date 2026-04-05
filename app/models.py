@@ -7,12 +7,14 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     auth0_id = db.Column(db.String(128), unique=True, nullable=False)
+    
     name = db.Column(db.String(128), nullable=True)
     email = db.Column(db.String(128), nullable=True)
     picture = db.Column(db.String(512), nullable=True)
     nickname = db.Column(db.String(128), nullable=True)
     github_token = db.Column(db.String(256), nullable=True)
     github_username = db.Column(db.String(128), nullable=True)
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -25,3 +27,21 @@ class User(db.Model):
             'nickname': self.nickname,
             'github_username': self.github_username,
         }
+    
+# AI roadmap suggestions model -> for faster retrieval and to reduce API calls
+class Roadmap(db.Model):
+    __tablename__ = 'roadmaps'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    title = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    learning_outcome = db.Column(db.Text)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Roadmap: title={self.title}, description={self.description}>'
+    
+
