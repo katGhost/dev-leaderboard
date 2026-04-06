@@ -29,18 +29,14 @@ def dashboard():
     suggestions = []
 
     if user.github_username:
-        # try Token Vault first, fall back to DB token
-        github_token = get_github_token_from_vault(user.auth0_id)
-        if not github_token:
-            github_token = user.github_token
-
-        if github_token:
-            try:
-                suggestions = Roadmap.query.filter_by(
-                    user_id=user.id
-                ).order_by(Roadmap.created_at.desc()).limit(3).all()
-            except Exception as e:
-                print(f"Dashboard roadmap fetch error: {e}")
+        # fetch roadmap from DB regardless of token vault status
+        # token vault is only needed for generate-roadmap, not for reading saved data
+        try:
+            suggestions = Roadmap.query.filter_by(
+                user_id=user.id
+            ).order_by(Roadmap.created_at.desc()).limit(3).all()
+        except Exception as e:
+            print(f"Dashboard roadmap fetch error: {e}")
 
     return render_template('dashboard.html', user=user, suggestions=suggestions)
 
@@ -52,16 +48,25 @@ def generate_roadmap():
 
     user = User.query.get(session.get('user_id'))
 
-    if user.github_token:
+    if user.github_username:
         try:
-            github = GithubService(user.github_token)
-            user_activity = github.summarize_user_activity(user.github_token)
+            # try vault first, fall back to DB token
+            github_token = get_github_token_from_vault(user.auth0_id)
+            if not github_token:
+                print("Token Vault unavailable, using DB token")
+                github_token = user.github_token
+
+            if not github_token:
+                print("No GitHub token available")
+                return redirect(url_for('app.dashboard'))
+
+            github = GithubService(github_token)
+            user_activity = github.summarize_user_activity(github_token)
             suggestions = generate_next_projects(user_activity)
 
-            # clear old roadmap entries for this user
+            # clear old roadmap
             Roadmap.query.filter_by(user_id=user.id).delete()
 
-            # save new roadmap
             for project in suggestions:
                 new_project = Roadmap(
                     user_id=user.id,
