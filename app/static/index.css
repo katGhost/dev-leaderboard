@@ -140,7 +140,6 @@ body {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 7px;
-    /* border: 1.5px solid rgba(6, 56, 53, 0.7); */
     margin: auto;
     padding: 1.5rem 2.5rem;
     box-shadow: 0 12px 35px rgba(6, 156, 53, 0.2);
@@ -217,10 +216,6 @@ a {
   color: #09B83E;
   font-size: 12px;
 }
-/* .roadmap-icon {
-  color: #a855f7;
-  font-size: 12px;
-} */
 
 .roadmap-title,
 .username {
