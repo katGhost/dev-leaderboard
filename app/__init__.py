@@ -12,8 +12,6 @@ def create_app():
     # Config FIRST
     app.config.from_object('app.config.Config')
 
-    print(f'SECRET KEY: ', app.config['SECRET_KEY'])
-
     app.secret_key = app.config['SECRET_KEY']
     
     app.config['PREFERRED_URL_SCHEME'] = 'https'    # still in dev
