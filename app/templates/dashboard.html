@@ -46,7 +46,7 @@
                     </p>
                     <!-- Generate roadmap button -->
                     <form method="POST" action="{{ url_for('app.generate_roadmap') }}">
-                        <button type="submit" class="btn btn-generate-roadmap btn-sm" onclick="this.disabled=true; this.innerText='Generating...'; this.form.submit();">
+                        <button type="submit" class="btn btn-generate-roadmap btn-sm mb-4" onclick="this.disabled=true; this.innerText='Generating...'; this.form.submit();">
                             Request Roadmap
                         </button>
                     </form>
@@ -79,11 +79,11 @@
                         </ul>
                     {% else %}
                         <p class="text-secondary"> Connect GitHub to unlock your AI-powered roadmap. </p>
-                        {% if not user.github_username %}
+                        <!-- {% if not user.github_username %}
                         <a href="{{ url_for('app.github_login') }}" class="btn btn-dark btn-sm">
                             <i class="fa-brands fa-github me-1"></i> Connect GitHub
                         </a>
-                        {% endif %}
+                        {% endif %} -->
                     {% endif %}
                 </div>
             </div>
