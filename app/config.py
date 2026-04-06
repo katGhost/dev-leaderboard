@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-print("LOADED AUTH0_DOMAIN:", os.getenv("AUTH0_DOMAIN"))
 
 class Config:
     # App

@@ -1,6 +1,6 @@
 from functools import wraps
 import requests
-from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
+from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify, flash
 from app.oauth import oauth
 from app.config import Config
 from app.extensions import db
@@ -36,7 +36,7 @@ def dashboard():
                 user_id=user.id
             ).order_by(Roadmap.created_at.desc()).limit(3).all()
         except Exception as e:
-            print(f"Dashboard roadmap fetch error: {e}")
+            raise Exception("Error fetching roadmap from DB: ", str(e))
 
     return render_template('dashboard.html', user=user, suggestions=suggestions)
 
@@ -79,7 +79,6 @@ def generate_roadmap():
             db.session.commit()
 
         except Exception as e:
-            print(f"Roadmap generation error: {e}")
             db.session.rollback()
 
     return redirect(url_for('app.dashboard'))
@@ -115,7 +114,6 @@ def callback():
         token=token
     )
     user_info = resp.json()
-    print("USERINFO:", user_info)
 
     # upsert user into DB
     auth0_id = user_info.get('sub')
@@ -143,7 +141,6 @@ def callback():
 
     # storing only the db user_id in session
     session['user_id'] = user.id
-    print('SESSION_USER_ID: ', session.get('user_id'))
 
     return redirect(url_for('app.profile'))
 
@@ -199,7 +196,6 @@ def github_callback():
         print("GitHub token stored in Token Vault")
     else:
         # fallback to DB if vault fails -> keeps app working long enough
-        print("Token Vault failed, falling back to DB storage")
         user.github_token = github_token
         db.session.commit()
 
@@ -234,4 +230,5 @@ def logout():
     session.pop('auth_token', None)
     session.pop('github_token', None)
     session.clear()
+    flash('You have been logged out.', 'info')
     return redirect(url_for('app.home'))  # fixed blueprint prefix

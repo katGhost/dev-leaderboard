@@ -53,7 +53,6 @@ def get_github_token_from_vault(auth0_user_id):
         return None
 
     except Exception as e:
-        print(f"Token Vault error: {e}")
         return None
 
 
@@ -81,5 +80,4 @@ def connect_github_account(auth0_user_id, github_access_token):
         return True
 
     except Exception as e:
-        print(f"Token Vault link error: {e}")
         return False
