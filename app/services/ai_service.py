@@ -78,8 +78,8 @@ Developer Profile:
             parsed = json.loads(content)
 
             # validate structure
-            if isinstance(parsed, list) and len(parsed) == 3:
-                return parsed
+            if isinstance(parsed, list) and len(parsed) >= 2:
+                return parsed[:3]
 
             print(f"Invalid structure from {model}: {parsed}")
 
