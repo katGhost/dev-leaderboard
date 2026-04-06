@@ -1,23 +1,25 @@
 import requests
 import os
-from app.config import Config
+from dotenv import load_dotenv
+from urllib.parse import quote
 
-# Get token vault configs
-AUTH0_CUSTOM_API_CLIENT_ID=Config.AUTH0_CUSTOM_API_CLIENT_ID
-AUTH0_CUSTOM_API_CLIENT_SECRET=Config.AUTH0_CUSTOM_API_CLIENT_SECRET
-AUTH0_DOMAIN=Config.AUTH0_DOMAIN
-GITHUB_CONNECTION_NAME=Config.GITHUB_CONNECTION_NAME
+load_dotenv(override=True)
+
+AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
+AUTH0_CUSTOM_API_CLIENT_ID = os.getenv("AUTH0_CUSTOM_API_CLIENT_ID")
+AUTH0_CUSTOM_API_CLIENT_SECRET = os.getenv("AUTH0_CUSTOM_API_CLIENT_SECRET")
+AUTH0_AUDIENCE = os.getenv("AUTH0_AUDIENCE")
+GITHUB_CONNECTION_NAME = os.getenv("GITHUB_CONNECTION_NAME", "github")
 
 
 def get_management_api_token():
-    """Get an Auth0 Management API token using client credentials."""
     response = requests.post(
         f"https://{AUTH0_DOMAIN}/oauth/token",
         json={
             "grant_type": "client_credentials",
             "client_id": AUTH0_CUSTOM_API_CLIENT_ID,
             "client_secret": AUTH0_CUSTOM_API_CLIENT_SECRET,
-            "audience": f"https://{AUTH0_DOMAIN}/api/v2/",
+            "audience": f"https://{AUTH0_AUDIENCE}/",
         }
     )
     response.raise_for_status()
@@ -25,16 +27,14 @@ def get_management_api_token():
 
 
 def get_github_token_from_vault(auth0_user_id):
-    """
-    Fetch the GitHub access token stored in Auth0 Token Vault
-    for a given Auth0 user (identified by their sub/auth0_id).
-    """
     try:
         mgmt_token = get_management_api_token()
 
-        # fetch the user's connected accounts from Auth0
+        # encode the user_id to handle special characters like |
+        encoded_user_id = quote(auth0_user_id, safe='')
+
         response = requests.get(
-            f"https://{AUTH0_DOMAIN}/api/v2/users/{auth0_user_id}",
+            f"https://{AUTH0_DOMAIN}/api/v2/users/{encoded_user_id}",
             headers={
                 "Authorization": f"Bearer {mgmt_token}",
                 "Content-Type": "application/json",
@@ -43,7 +43,6 @@ def get_github_token_from_vault(auth0_user_id):
         response.raise_for_status()
         user_data = response.json()
 
-        # find the github identity in the user's linked accounts
         identities = user_data.get("identities", [])
         for identity in identities:
             if identity.get("connection") == GITHUB_CONNECTION_NAME:
@@ -59,16 +58,14 @@ def get_github_token_from_vault(auth0_user_id):
 
 
 def connect_github_account(auth0_user_id, github_access_token):
-    """
-    Link a GitHub account to an Auth0 user profile,
-    storing the token in Token Vault.
-    """
     try:
         mgmt_token = get_management_api_token()
 
-        # link the github account to the auth0 user
+        # encode the user_id to handle special characters like |
+        encoded_user_id = quote(auth0_user_id, safe='')
+
         response = requests.post(
-            f"https://{AUTH0_DOMAIN}/api/v2/users/{auth0_user_id}/identities",
+            f"https://{AUTH0_AUDIENCE}/users/{encoded_user_id}/identities",
             headers={
                 "Authorization": f"Bearer {mgmt_token}",
                 "Content-Type": "application/json",
@@ -79,6 +76,7 @@ def connect_github_account(auth0_user_id, github_access_token):
                 "access_token": github_access_token,
             }
         )
+        print("VAULT LINK RESPONSE:", response.status_code, response.json())
         response.raise_for_status()
         return True
 
