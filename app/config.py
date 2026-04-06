@@ -2,8 +2,9 @@ import os
 from dotenv import load_dotenv
 
 
-load_dotenv()
+load_dotenv(override=True)
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+print("LOADED AUTH0_DOMAIN:", os.getenv("AUTH0_DOMAIN"))
 
 class Config:
     # App
@@ -22,9 +23,9 @@ class Config:
     GITHUB_AUTHORIZATION_URL = os.getenv('GITHUB_AUTHORIZATION_URL')
 
     # Token vault configuration
-    AUTH0_CUSTOM_API_CLIENT_ID = os.getenv("AUTH0_CUSTOM_API_CLIENT_ID")
-    AUTH0_CUSTOM_API_CLIENT_SECRET = os.getenv("AUTH0_CUSTOM_API_CLIENT_SECRET")
-    GITHUB_CONNECTION_NAME = os.getenv("GITHUB_CONNECTION_NAME", "github")
+    # AUTH0_CUSTOM_API_CLIENT_ID = os.getenv("AUTH0_CUSTOM_API_CLIENT_ID")
+    # AUTH0_CUSTOM_API_CLIENT_SECRET = os.getenv("AUTH0_CUSTOM_API_CLIENT_SECRET")
+    # GITHUB_CONNECTION_NAME = os.getenv("GITHUB_CONNECTION_NAME", "github")
 
     # SQLite stored in project root
     SQLALCHEMY_DATABASE_URI = "sqlite:///devleaderboard.db"
