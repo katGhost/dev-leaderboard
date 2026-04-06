@@ -15,13 +15,6 @@ body {
 }
 
 /* NAVBAR */
-/* .app-name {
-    background: linear-gradient(135deg, #09B83E, #384e6b);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 700;
-} */
 
 .custom-navbar {
     display: flex;
@@ -89,31 +82,7 @@ body {
     display: inline;
 }
 
-/* Flash messages */
-.flash-messages {
-    width: 100%;
-    max-width: 800px;
-    height: fit-content;
-    border-radius: 7px;
-}
-
-.alert-danger {
-    background: #E74C3C;
-}
-
-.alert-warning {
-    background: #F1C40F;
-}
-
-.alert-info {
-    background: #3498DB;
-}
-
-.alert-success {
-    background: #2ECC71;
-}
-
-/* Landing */
+/* ================Landing============================= */
 .landing-page {
     min-height: 100vh;
     background: radial-gradient(circle at 0% 20%, rgba(6, 156, 53, 0.25) 20%, transparent 60%);
@@ -165,7 +134,7 @@ body {
 }
 
 
-/* AUTH */
+/* =================AUTH======================= */
 .auth-section {
     background: rgba(40, 40, 40, 0.35);
     backdrop-filter: blur(12px);
@@ -336,7 +305,7 @@ a {
 .btn-disconnect-github {
     background: transparent;
     padding: 0.5rem 0.75rem;
-    border: 1.2px solid #09B83E;
+    border: 1.2px solid whitesmoke;
     border-radius: 7px;
     color: #f3f3f3;
     transition: all 0.3s ease-in;
@@ -344,14 +313,40 @@ a {
 }
 
 .btn-disconnect-github:hover {
-    color: #09B83E;
+    color: tranparent;
+    background: whitesmoke;
     border: none;
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
+    box-shadow: 0 12px 35px rgba(252, 252, 252, 0.4);
+}
+
+/* =======================Flash messages============================= */
+.flash-messages {
+    width: 100%;
+    max-width: 800px;
+    height: fit-content;
+    border-radius: 7px;
+}
+
+.alert-danger {
+    background: #E74C3C;
+}
+
+.alert-warning {
+    background: #F1C40F;
+}
+
+.alert-info {
+    background: #3498DB;
+}
+
+.alert-success {
+    background: #2ECC71;
 }
 
 
-/* RESPONSIVENESS */
+
+/* =====================RESPONSIVENESS======================== */
 @media (max-width: 768px) {
     .app-name {
         display: none;
@@ -404,7 +399,7 @@ a {
     .btn-disconnect-github {
         background: transparent;
         padding: 0.5rem 0.75rem;
-        border: 1.2px solid #09B83E;
+        border: 1.2px solid whitesmoke;
         border-radius: 7px;
         color: #f3f3f3;
         transition: all 0.3s ease-in;
@@ -412,9 +407,9 @@ a {
     }
 
     .btn-disconnect-github:hover {
-        color: #09B83E;
+        color: tranparent;
         border: none;
         transform: translateY(-3px);
-        box-shadow: 0 12px 35px rgba(6, 156, 53, 0.4);
+        box-shadow: 0 12px 35px rgba(252, 252, 252, 0.4);
     }
 }
