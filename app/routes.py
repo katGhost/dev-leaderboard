@@ -9,6 +9,7 @@ from app.models import User, Roadmap
 from app.services.leaderboard_service import get_leaderboard
 from app.services.ai_service import generate_next_projects
 from app.services.github_service import GithubService
+from app.services.token_vault_service import get_github_token_from_vault, connect_github_account
 
 
 app_bp = Blueprint('app', __name__)
@@ -25,18 +26,21 @@ def dashboard():
         return redirect(url_for('app.home'))
 
     user = User.query.get(session.get('user_id'))
-
-    # always initialize suggestions to empty list
     suggestions = []
 
-    if user.github_token:
-        try:
-            # fetch stored roadmap from DB -> no API call here
-            suggestions = Roadmap.query.filter_by(
-                user_id=user.id
-            ).order_by(Roadmap.created_at.desc()).limit(3).all()
-        except Exception as e:
-            print(f"Dashboard roadmap fetch error: {e}")
+    if user.github_username:
+        # try Token Vault first, fall back to DB token
+        github_token = get_github_token_from_vault(user.auth0_id)
+        if not github_token:
+            github_token = user.github_token
+
+        if github_token:
+            try:
+                suggestions = Roadmap.query.filter_by(
+                    user_id=user.id
+                ).order_by(Roadmap.created_at.desc()).limit(3).all()
+            except Exception as e:
+                print(f"Dashboard roadmap fetch error: {e}")
 
     return render_template('dashboard.html', user=user, suggestions=suggestions)
 
@@ -98,9 +102,11 @@ def callback():
 
     # print("FULL TOKEN:", token)
     # print("USERINFO FROM TOKEN:", token.get('userinfo'))
+    import os
+    domain = os.getenv("AUTH0_DOMAIN")
 
     resp = oauth.auth0.get(
-        f'https://{Config.AUTH0_DOMAIN}/userinfo',
+        f'https://{domain}/userinfo',
         token=token
     )
     user_info = resp.json()
@@ -162,12 +168,11 @@ def github_login():
 
 @app_bp.route('/github/callback')
 def github_callback():
-    print('REDIRECT URI HIT!')
+    print("GITHUB CALLBACK HIT")
     if 'user_id' not in session:
         return redirect(url_for('app.home'))
 
     token = oauth.github.authorize_access_token()
-    print(f'FULL GITHUB TOKEN: ', token)
     github_token = token['access_token']
 
     # fetch github username
@@ -175,18 +180,47 @@ def github_callback():
     resp = requests.get('https://api.github.com/user', headers=headers)
     github_user = resp.json()
 
-    # save token sadn user to db
     user = User.query.get(session.get('user_id'))
     if not user:
         return redirect(url_for('app.home'))
 
-    print(f'Github User: ', user)
-    user.github_token = github_token
+    # github username still stored in DB -> not the token
     user.github_username = github_user.get('login')
     db.session.commit()
 
-    return redirect(url_for('app.dashboard'))
+    # token now stored in Auth0 Token Vault instead of DB
+    connected = connect_github_account(user.auth0_id, github_token)
+    if connected:
+        print("GitHub token stored in Token Vault")
+    else:
+        # fallback to DB if vault fails -> keeps app working long enough
+        print("Token Vault failed, falling back to DB storage")
+        user.github_token = github_token
+        db.session.commit()
 
+    return redirect(url_for('app.profile'))
+
+
+# Disconnect github route
+@app_bp.route('/disconnect/github', methods=['POST'])
+def disconnect_github():
+    if 'user_id' not in session:
+        return redirect(url_for('app.home'))
+
+    user = User.query.get(session.get('user_id'))
+    if not user:
+        return redirect(url_for('app.home'))
+
+    # clear github data from DB
+    user.github_token = None
+    user.github_username = None
+    db.session.commit()
+
+    # clear roadmap data tied to this user
+    Roadmap.query.filter_by(user_id=user.id).delete()
+    db.session.commit()
+
+    return redirect(url_for('app.profile'))
 
 
 @app_bp.route('/logout')
